@@ -19,7 +19,7 @@ public class AopConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(AopConfig.class);
 
-    @Pointcut("within(org.example.learn.spring.boot.web.hello.controller..*)")
+    @Pointcut("within(org.example.learn.spring.boot.web.proxy.controller..*)")
     public void controllerPointcut() {}
 
     @Around("controllerPointcut()")
@@ -27,7 +27,7 @@ public class AopConfig {
         logInvocation(proceedingJoinPoint);
     }
 
-    @Pointcut("within(org.example.learn.spring.boot.web.hello.service..*)")
+    @Pointcut("within(org.example.learn.spring.boot.web.proxy.service..*)")
     public void servicePointcut() {}
 
     @Around("servicePointcut()")
