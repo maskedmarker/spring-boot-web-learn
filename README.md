@@ -29,3 +29,9 @@ initStrategies都做了哪些工作:
     - RequestMappingHandlerMapping正常收集metadata时,HandlerMethod.beanType是proxy类
     - RequestMappingHandlerMapping在处理请求时,HandlerMethod.bean是proxy实例
     - aop作用发生在spring容器生成bean时,就已经是proxy类实例了.
+
+
+Spring Boot提供了一个内置的日志记录解决方案，通过 AbstractRequestLoggingFilter 可以记录请求的详细信息.
+AbstractRequestLoggingFilter 有两个不同的实现类(CommonsRequestLoggingFilter/ServletContextRequestLoggingFilter).
+我们常用的是 CommonsRequestLoggingFilter
+

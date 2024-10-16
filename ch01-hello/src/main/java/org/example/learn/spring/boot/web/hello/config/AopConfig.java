@@ -23,16 +23,16 @@ public class AopConfig {
     public void controllerPointcut() {}
 
     @Around("controllerPointcut()")
-    public void logController(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        logInvocation(proceedingJoinPoint);
+    public Object logController(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        return logInvocation(proceedingJoinPoint);
     }
 
     @Pointcut("within(org.example.learn.spring.boot.web.hello.service..*)")
     public void servicePointcut() {}
 
     @Around("servicePointcut()")
-    public void logService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        logInvocation(proceedingJoinPoint);
+    public Object logService(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        return logInvocation(proceedingJoinPoint);
     }
 
     private Object logInvocation(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -44,7 +44,7 @@ public class AopConfig {
             logger.info("after invocation of {}. returnValue={}", proceedingJoinPoint.getTarget(), returnValue);
             return returnValue;
         } catch (Throwable e) {
-            logger.info("exception on invocation of {}. returnValue={}", proceedingJoinPoint.getTarget(), returnValue);
+            logger.error("exception on invocation of {}. returnValue={}", proceedingJoinPoint.getTarget(), returnValue);
             throw e;
         }
     }

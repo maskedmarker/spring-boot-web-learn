@@ -7,7 +7,7 @@ server:
 # spring
 spring:
   application:
-    name: hello-druid
+    name: hello-web
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -81,4 +81,5 @@ logging:
     druid:
       sql:
         Statement: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
