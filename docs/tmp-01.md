@@ -1,0 +1,4 @@
+
+@RequestBody和@ResponseBody注解的预留的aop切入点
+RequestBodyAdvice
+ResponseBodyAdvice
