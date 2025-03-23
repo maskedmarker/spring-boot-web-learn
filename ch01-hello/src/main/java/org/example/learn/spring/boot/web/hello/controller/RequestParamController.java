@@ -1,6 +1,9 @@
 package org.example.learn.spring.boot.web.hello.controller;
 
-import org.example.learn.spring.boot.web.hello.model.RequestData;
+import org.example.learn.spring.boot.web.hello.request.MultipartRequestParam;
+import org.example.learn.spring.boot.web.hello.response.MultipartRequestResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/param")
 public class RequestParamController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestParamController.class);
 
     /**
      * url的queryString包含需要传递的参数
@@ -28,7 +33,7 @@ public class RequestParamController {
         System.out.println("key2 = " + key2);
 
         String value2 = request.getParameter("key2");
-        System.out.println("value2 = " + value2);
+        logger.info("value2:{}", value2);
 
         return "queryString";
     }
@@ -46,7 +51,7 @@ public class RequestParamController {
         System.out.println("key2 = " + key2);
 
         String value2 = request.getParameter("key2");
-        System.out.println("value2 = " + value2);
+        logger.info("value2:{}", value2);
 
         return "formUrlencoded";
     }
@@ -56,9 +61,12 @@ public class RequestParamController {
      */
     @RequestMapping("/multipart")
     @ResponseBody
-    public String multipart(HttpServletRequest request, @ModelAttribute RequestData requestData) {
-        System.out.println("request = " + request);
-        return "hello";
+    public MultipartRequestResult multipart(HttpServletRequest request, @ModelAttribute MultipartRequestParam multipartRequestParam) {
+        logger.info("request:{}", request);
+
+        MultipartRequestResult requestResult = new MultipartRequestResult();
+        requestResult.setData("hello");
+        return requestResult;
     }
 
     /**
@@ -66,8 +74,11 @@ public class RequestParamController {
      */
     @RequestMapping("/multipart2")
     @ResponseBody
-    public String multipart2(MultipartHttpServletRequest request) {
-        System.out.println("request = " + request);
-        return "hello";
+    public MultipartRequestResult multipart2(MultipartHttpServletRequest request) {
+        logger.info("request:{}", request);
+
+        MultipartRequestResult requestResult = new MultipartRequestResult();
+        requestResult.setData("hello");
+        return requestResult;
     }
 }

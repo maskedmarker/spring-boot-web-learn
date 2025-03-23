@@ -1,8 +1,9 @@
-package org.example.learn.spring.boot.web.hello.model;
+package org.example.learn.spring.boot.web.hello.request;
 
+import org.example.learn.spring.boot.web.hello.util.JsonUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-public class RequestData {
+public class MultipartRequestParam {
 
     private String key1;
 
@@ -33,5 +34,10 @@ public class RequestData {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    @Override
+    public String toString() {
+        return JsonUtils.toStr(this);
     }
 }
