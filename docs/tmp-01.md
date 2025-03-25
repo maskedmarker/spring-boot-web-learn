@@ -10,7 +10,6 @@ model
   vo
   dto
   po
-  bo
 service
 util
 task
