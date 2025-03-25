@@ -29,8 +29,8 @@ public class RequestParamController {
     @RequestMapping("/queryString")
     @ResponseBody
     public String queryString(HttpServletRequest request, @RequestParam("key1") String key1, @RequestParam("key2") String key2) {
-        System.out.println("key1 = " + key1);
-        System.out.println("key2 = " + key2);
+        logger.info("key1 = {}", key1);
+        logger.info("key2 = {}", key2);
 
         String value2 = request.getParameter("key2");
         logger.info("value2:{}", value2);
@@ -47,8 +47,8 @@ public class RequestParamController {
     @RequestMapping("/formUrlencoded")
     @ResponseBody
     public String formUrlencoded(HttpServletRequest request, @RequestParam("key1") String key1, @RequestParam("key2") String key2) {
-        System.out.println("key1 = " + key1);
-        System.out.println("key2 = " + key2);
+        logger.info("key1 = {}", key1);
+        logger.info("key2 = {}", key2);
 
         String value2 = request.getParameter("key2");
         logger.info("value2:{}", value2);
