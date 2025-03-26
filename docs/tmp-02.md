@@ -3,6 +3,8 @@
 ## tomcat启动
 
 ServletWebServerApplicationContext
+
+tomcat在容器finishRefresh时启动
 ```text
 org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext#refresh
 	public void refresh() throws BeansException, IllegalStateException {
