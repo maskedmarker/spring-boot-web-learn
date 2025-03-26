@@ -1,5 +1,56 @@
+# spring-boot-web关于tomcat的内部实现
+
+## tomcat启动
+
+ServletWebServerApplicationContext
+```text
+org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext#refresh
+	public void refresh() throws BeansException, IllegalStateException {
+		synchronized (this.startupShutdownMonitor) {
+			// ...
+			try {
+				// ...
+
+				// Instantiate all remaining (non-lazy-init) singletons.
+				finishBeanFactoryInitialization(beanFactory);
+
+				// Last step: publish corresponding event.
+				finishRefresh();
+			}
+			// ...
+		}
+	}
+	
+	
+	protected void finishRefresh() {
+		// Clear context-level resource caches (such as ASM metadata from scanning).
+		clearResourceCaches();
+
+		// Initialize lifecycle processor for this context.
+		initLifecycleProcessor();
+
+		// Propagate refresh to lifecycle processor first.
+		getLifecycleProcessor().onRefresh();
+
+		// Publish the final event.
+		publishEvent(new ContextRefreshedEvent(this));
+
+		// Participate in LiveBeansView MBean, if active.
+		LiveBeansView.registerApplicationContext(this);
+	}	
+	
+org.springframework.boot.web.servlet.context.WebServerStartStopLifecycle#start	
+
+	public void start() {
+		this.webServer.start();
+		this.running = true;
+		this.applicationContext
+				.publishEvent(new ServletWebServerInitializedEvent(this.webServer, this.applicationContext));
+	}
+```
 
 
+## data-binding
 
 ```text
 org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.resolveName(String name, MethodParameter parameter, NativeWebRequest request)
