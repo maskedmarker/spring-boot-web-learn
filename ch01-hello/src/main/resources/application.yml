@@ -7,10 +7,16 @@ server:
 # spring
 spring:
   application:
-    name: hello-web
+    name: hello-web-mvc
   resources:
     # static-locations指向容纳静态文件的文件夹
     static-locations: classpath:/static-web-resources/
+    cache:
+      cachecontrol:
+        no-store: true
+        no-cache: true
+#        must-revalidate: true
+#        max-age: 0
   mvc:
     # static-path-pattern标识静态文件的前缀.
     # 举例: http://localhost:9080/myapp/static/web/pdf/viewer.html中, uri(/myapp/static/web/pdf/viewer.html)去除context-path(/myapp),去除static-path-pattern(/static),剩余的(web/pdf/viewer.html)去static-locations目录下找同路径文件

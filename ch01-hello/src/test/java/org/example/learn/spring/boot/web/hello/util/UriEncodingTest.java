@@ -19,16 +19,26 @@ public class UriEncodingTest {
      */
     @Test
     public void test0() {
-        String queryValue = "这是一个中文值";
-        // 将字符串按utf-8的编码方式拆解为一个个code-point,将code-point用percent-encoding方法编码
+        String queryValue = "中文张三";
+        // 将字符串按utf-8的编码方式拆解为一个个code-point的code-unit,将code-unit用percent-encoding方法编码
         String encodedValue = UriUtils.encode(queryValue, StandardCharsets.UTF_8);
         System.out.println("encodedValue = " + encodedValue);
     }
 
     @Test
     public void test1() {
-        String encodedValue = "%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%AD%E6%96%87%E5%80%BC";
+        String encodedValue = "%E4%B8%AD%E6%96%87%E5%BC%A0%E4%B8%89";
         String queryValue = UriUtils.decode(encodedValue, StandardCharsets.UTF_8);
         System.out.println("queryValue = " + queryValue);
+    }
+
+    /**
+     * form-data的value值用percent-encoding方法编码,但是不带%前缀
+     */
+    @Test
+    public void test2() {
+        String encodedValue = "%E4%B8%AD%E6%96%87%E5%BC%A0%E4%B8%89".replace("%", "");
+        String formDataValue = new String(HexUtils.fromHexString(encodedValue), StandardCharsets.UTF_8);
+        System.out.println("formDataValue = " + formDataValue);
     }
 }
