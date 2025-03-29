@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>ch01-hello</module>
-        <module>ch02-proxy-controller</module>
     </modules>
 
     <properties>
