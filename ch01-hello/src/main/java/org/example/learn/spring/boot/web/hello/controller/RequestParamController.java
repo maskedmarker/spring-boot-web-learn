@@ -5,6 +5,7 @@ import org.example.learn.spring.boot.web.hello.response.MultipartRequestResult;
 import org.example.learn.spring.boot.web.hello.util.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -83,13 +84,19 @@ public class RequestParamController {
             logger.info("---------part name:{}--------------", name);
             logger.info("headerNames={} headerNameValues={}", headerNames, headerNameValues);
             String contentType = part.getContentType();
-            if (StringUtils.isEmpty(contentType)) {
+
+            MediaType mediaType = null;
+            if (!StringUtils.isEmpty(contentType)) {
+                mediaType = MediaType.parseMediaType(contentType);
+            }
+
+            if (mediaType == null || MediaType.TEXT_PLAIN.getType().equals(mediaType.getType())) {
                 try {
                     // form-data不用percent-encoding,无论是字符串还是文件,传输的都是原始二进制.
                     // 对于字符串,原始二进制指的就是code-unit序列了
                     byte[] bytes = FileCopyUtils.copyToByteArray(part.getInputStream());
                     String rawValue = new String(bytes, StandardCharsets.UTF_8);
-                    logger.info("rawValue={}", rawValue);
+                    logger.info("value=[{}]", rawValue);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

@@ -36,6 +36,7 @@ multipart/form-data是一种 MIME 类型,当表单元素包含文件时,采用�
 允许各个body part再次声明各自的header
 
 multipart/form-data不使用百分比编码编码.
+multipart/form-data的field的默认值都是空字符串.(因为无法区分body part的值为null或者空字符串)
 ```
 
 #### Why Percent-Encoding is NOT Needed in multipart/form-data
