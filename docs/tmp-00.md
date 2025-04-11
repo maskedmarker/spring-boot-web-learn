@@ -53,7 +53,10 @@ Multipart boundaries separate fields, avoiding the need for encoding
     Each field in multipart/form-data is enclosed within a boundary, meaning special characters (including spaces and Unicode text) can be safely transmitted.
 ```
 
-
+rfc-7578中规定:form-data的每个part可以有自己的content-type,如果没有则使用默认值text/plain.
+有些请求中会将part的content-type声明为application/x-www-form-urlencoded
+有些请求中会将part的content-type声明为text/plain
+所以在解析时,一定要注意.
 
 
 
