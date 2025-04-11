@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>ch01-hello</module>
+        <module>ch01-hello-boot</module>
     </modules>
 
     <properties>

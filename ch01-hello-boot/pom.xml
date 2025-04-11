@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ch01-hello</artifactId>
+    <artifactId>ch01-hello-boot</artifactId>
 
     <dependencies>
         <dependency>
