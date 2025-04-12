@@ -119,7 +119,7 @@ public class Ch01RequestParameterTest {
             // 添加普通字段
             builder.addTextBody("field1", "value1", ContentType.TEXT_PLAIN); // 不设置编码就用text/plain的编码ISO_8859_1
             builder.addTextBody("field2", URLEncoder.encode("中文", StandardCharsets.UTF_8.name()), ContentType.APPLICATION_FORM_URLENCODED);
-            builder.addTextBody("field3", "{\"name\": \"zhangsan\"}", ContentType.APPLICATION_JSON);
+            builder.addTextBody("field3", "{\"name\": \"张三\"}", ContentType.APPLICATION_JSON);
 
             // 添加文件字段
             File file = new File("src/test/resources/文件名.txt");

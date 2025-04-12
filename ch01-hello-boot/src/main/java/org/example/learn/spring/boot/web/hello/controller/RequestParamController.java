@@ -1,5 +1,6 @@
 package org.example.learn.spring.boot.web.hello.controller;
 
+import org.apache.commons.codec.binary.Base64;
 import org.example.learn.spring.boot.web.hello.request.MultipartRequestParam;
 import org.example.learn.spring.boot.web.hello.response.MultipartRequestResult;
 import org.example.learn.spring.boot.web.hello.util.HexUtils;
@@ -90,17 +91,27 @@ public class RequestParamController {
                 mediaType = MediaType.parseMediaType(contentType);
             }
 
-            if (mediaType == null || MediaType.TEXT_PLAIN.getType().equals(mediaType.getType())) {
-                try {
-                    // form-data不用percent-encoding,无论是字符串还是文件,传输的都是原始二进制.
-                    // 对于字符串,原始二进制指的就是code-unit序列了
-                    byte[] bytes = FileCopyUtils.copyToByteArray(part.getInputStream());
+            try {
+                byte[] bytes = FileCopyUtils.copyToByteArray(part.getInputStream());
+                logger.info("value has {} bytes", bytes.length);
+                logger.info("value base64 value is {}", Base64.encodeBase64String(bytes));
+
+                // form-data的part没有声明content-type,就使用默认值text/plain
+                if (mediaType == null || MediaType.TEXT_PLAIN.isCompatibleWith(mediaType)) {
+                    // text/plain 原始二进制数据指的就是字符串的code-unit序列 (这里假定了client使用的是UTF-8)
                     String rawValue = new String(bytes, StandardCharsets.UTF_8);
-                    logger.info("value=[{}]", rawValue);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    logger.info("rawValue=[{}]", rawValue);
+                } else if(MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(mediaType)) {
+                    String rawValue = UriUtils.decode(new String(bytes, StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                    logger.info("rawValue=[{}]", rawValue);
+                } else if(MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
+                    String rawValue = new String(bytes, StandardCharsets.UTF_8);
+                    logger.info("rawValue=[{}]", rawValue);
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+
             logger.info("-----------------------");
         });
 
