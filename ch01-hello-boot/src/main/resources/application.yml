@@ -27,7 +27,7 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework: DEBUG
+    org.springframework: INFO
     druid.sql.Statement: INFO
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
