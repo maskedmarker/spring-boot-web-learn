@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>普通请求 multipart/form-data</title>
+    <title>application/x-www-form-urlencoded</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,40 +43,16 @@
 </head>
 <body>
 <div class="form-container">
-    <h2>用户注册表单</h2>
-    <h5>multipart/form-data请求类型各种类型的入参</h5>
-    <form action="/myapp/param/multipart" method="post" enctype="multipart/form-data">
+    <h2>用户登录表单</h2>
+    <h5>post请求类型各种类型的入参2</h5>
+    <form action="/myapp/param/formUrlencoded" method="post">
         <div class="form-group">
             <label for="username">用户名</label>
             <input type="text" id="username" name="username">
         </div>
         <div class="form-group">
-            <label for="email">电子邮箱</label>
-            <input type="email" id="email" name="email">
-        </div>
-        <div class="form-group">
             <label for="password">密码</label>
             <input type="password" id="password" name="password">
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword">确认密码</label>
-            <input type="password" id="confirmPassword" name="confirmPassword">
-        </div>
-        <div class="form-group">
-            <label for="gender">性别</label>
-            <select id="gender" name="gender">
-                <option value="male">男</option>
-                <option value="female">女</option>
-                <option value="other">其他</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="bio">个人简介</label>
-            <textarea id="bio" name="bio" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="bio">上传头像</label>
-            <input type="file" id="headPhoto" name="headPhoto" accept="image/*">
         </div>
         <div class="form-group">
             <input type="submit" value="提交">

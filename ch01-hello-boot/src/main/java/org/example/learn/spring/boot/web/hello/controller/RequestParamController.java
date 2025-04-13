@@ -1,27 +1,21 @@
 package org.example.learn.spring.boot.web.hello.controller;
 
 import org.apache.commons.codec.binary.Base64;
-import org.example.learn.spring.boot.web.hello.request.MultipartRequestParam;
 import org.example.learn.spring.boot.web.hello.response.MultipartRequestResult;
-import org.example.learn.spring.boot.web.hello.util.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
@@ -35,19 +29,16 @@ public class RequestParamController {
 
     /**
      * url的queryString包含需要传递的参数
-     *
+     * <p>
      * 根据uri的规定,reserved characters和non-ASCII character都要percent-encoded
-     *
-     *
      */
     @RequestMapping("/queryString")
     @ResponseBody
-    public String queryString(HttpServletRequest request, @RequestParam("key1") String key1, @RequestParam("key2") String key2) {
-        logger.info("key1 = {}", key1);
-        logger.info("key2 = {}", key2);
-
-        String value2 = request.getParameter("key2");
-        logger.info("value2:{}", value2);
+    public String queryString(HttpServletRequest request) {
+        request.getParameterMap().forEach((k, v) -> {
+            logger.info("key = {}", k);
+            logger.info("value = {}", v);
+        });
 
         return "queryString";
     }
@@ -55,17 +46,16 @@ public class RequestParamController {
     /**
      * application/x-www-form-urlencoded类型的http请求,将需要传递的参数从url的queryString部分转移到了body中,
      * 但是reserved characters和non-ASCII character都要percent-encoded
-     *
+     * <p>
      * FormHttpMessageConverter来处理application/x-www-form-urlencoded类型的content-type
      */
     @RequestMapping("/formUrlencoded")
     @ResponseBody
-    public String formUrlencoded(HttpServletRequest request, @RequestParam("key1") String key1, @RequestParam("key2") String key2) {
-        logger.info("key1 = {}", key1);
-        logger.info("key2 = {}", key2);
-
-        String value2 = request.getParameter("key2");
-        logger.info("value2:{}", value2);
+    public String formUrlencoded(HttpServletRequest request) {
+        request.getParameterMap().forEach((k, v) -> {
+            logger.info("key = {}", k);
+            logger.info("value = {}", v);
+        });
 
         return "formUrlencoded";
     }
@@ -101,10 +91,10 @@ public class RequestParamController {
                     // text/plain 原始二进制数据指的就是字符串的code-unit序列 (这里假定了client使用的是UTF-8)
                     String rawValue = new String(bytes, StandardCharsets.UTF_8);
                     logger.info("rawValue=[{}]", rawValue);
-                } else if(MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(mediaType)) {
+                } else if (MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(mediaType)) {
                     String rawValue = UriUtils.decode(new String(bytes, StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
                     logger.info("rawValue=[{}]", rawValue);
-                } else if(MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
+                } else if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
                     String rawValue = new String(bytes, StandardCharsets.UTF_8);
                     logger.info("rawValue=[{}]", rawValue);
                 }
@@ -114,32 +104,6 @@ public class RequestParamController {
 
             logger.info("-----------------------");
         });
-
-        MultipartRequestResult requestResult = new MultipartRequestResult();
-        requestResult.setData("ok");
-        return requestResult;
-    }
-
-    /**
-     * 也可以通过MultipartHttpServletRequest来接收客户端发来的数据
-     */
-    @RequestMapping("/multipart2")
-    @ResponseBody
-    public MultipartRequestResult multipart(MultipartHttpServletRequest request) {
-        logger.info("request:{}", request);
-
-        MultipartRequestResult requestResult = new MultipartRequestResult();
-        requestResult.setData("ok");
-        return requestResult;
-    }
-
-    /**
-     * 通过@ModelAttribute注解来进行数据绑定
-     */
-    @RequestMapping("/multipart3")
-    @ResponseBody
-    public MultipartRequestResult multipart(HttpServletRequest request, @ModelAttribute MultipartRequestParam multipartRequestParam) {
-        logger.info("request:{}", request);
 
         MultipartRequestResult requestResult = new MultipartRequestResult();
         requestResult.setData("ok");
