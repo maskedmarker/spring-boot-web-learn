@@ -18,6 +18,9 @@ spring:
 #        must-revalidate: true
 #        max-age: 0
   mvc:
+    servlet:
+      # 大于等于0时,servlet容器启动时主动初始化servlet,否则当需要时才初始化
+      loadOnStartup: 1
     # static-path-pattern标识静态文件的前缀.
     # 举例: http://localhost:9080/myapp/static/web/pdf/viewer.html中, uri(/myapp/static/web/pdf/viewer.html)去除context-path(/myapp),去除static-path-pattern(/static),剩余的(web/pdf/viewer.html)去static-locations目录下找同路径文件
     static-path-pattern: /static/**
