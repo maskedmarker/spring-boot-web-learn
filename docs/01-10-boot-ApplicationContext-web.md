@@ -1,39 +1,16 @@
-# spring-boot-web
+# spring-boot-web-servlet
 
-
-## spring-boot启动过程
-
-spring-boot可以在3中环境中运行,即无web环境/servlet-web环境/reactive-web环境.
-
-SpringApplication.run启动初始阶段时,会基于classpath的信息来确定使用哪种运行环境(即WebApplicationType)
-```text
-org.springframework.boot.SpringApplication.SpringApplication(org.springframework.core.io.ResourceLoader, java.lang.Class<?>...)
-public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
-    // ...
-    this.webApplicationType = WebApplicationType.deduceFromClasspath();
-    // ...
-}
-
-org.springframework.boot.WebApplicationType.deduceFromClasspath
-static WebApplicationType deduceFromClasspath() {
-    if (ClassUtils.isPresent(WEBFLUX_INDICATOR_CLASS, null) && !ClassUtils.isPresent(WEBMVC_INDICATOR_CLASS, null)
-            && !ClassUtils.isPresent(JERSEY_INDICATOR_CLASS, null)) {
-        return WebApplicationType.REACTIVE;
-    }
-    for (String className : SERVLET_INDICATOR_CLASSES) {
-        if (!ClassUtils.isPresent(className, null)) {
-            return WebApplicationType.NONE;
-        }
-    }
-    return WebApplicationType.SERVLET;
-}
-```
-当判定运行环境为servlet-web环境时(即WebApplicationType.SERVLET),spring-boot的主类SpringApplication的主要属性也会做响应的调整.
+spring-boot当判定运行环境为servlet-web环境时(即WebApplicationType.SERVLET),spring-boot的主类SpringApplication的主要属性也会做响应的调整.
 SpringApplication将AnnotationConfigServletWebServerApplicationContext作为spring容器,用来容纳所需的bean.
 ```text
 ConfigurableEnvironment --> StandardServletEnvironment
 ConfigurableApplicationContext --> AnnotationConfigServletWebServerApplicationContext
 ```
+
+## AnnotationConfigServletWebServerApplicationContext
+
+AnnotationConfigServletWebServerApplicationContext是AbstractApplicationContext的子类,
+ConfigurableApplicationContext.refresh的主要逻辑流程在AbstractApplicationContext.refresh方法中.
 
 ### AbstractApplicationContext.refresh
 
