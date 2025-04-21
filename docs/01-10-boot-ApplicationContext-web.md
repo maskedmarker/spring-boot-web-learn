@@ -109,15 +109,12 @@ private void createWebServer() {
     ServletContext servletContext = getServletContext();
     // 如果没有指定webServer
     if (webServer == null && servletContext == null) {
-        StartupStep createWebServer = this.getApplicationStartup().start("spring.boot.webserver.create");
         ServletWebServerFactory factory = getWebServerFactory();
-        createWebServer.tag("factory", factory.getClass().toString());
         // 创建webServer时,预留了initializer类做初始化定制
         this.webServer = factory.getWebServer(getSelfInitializer());
-        createWebServer.end();
-        // 向spring容器中注册WebServerGracefulShutdownLifecycle,这样在spring容器关闭时回调SmartLifecycle.stop()方法进而调用webServer.stop()
+        // 向spring容器中注册WebServerGracefulShutdownLifecycle,这样在spring容器关闭时回调SmartLifecycle.stop()方法进而调用webServer.shutDownGracefully()(即webServer优雅停止)
         getBeanFactory().registerSingleton("webServerGracefulShutdown", new WebServerGracefulShutdownLifecycle(this.webServer));
-        // 向spring容器中注册WebServerStartStopLifecycle,这样容器启动后自动调用回调SmartLifecycle.start()方法进而调用webServer.start()(对于tomcat,从而触发tomcat的启动)
+        // 向spring容器中注册WebServerStartStopLifecycle,这样容器启动后自动调用回调SmartLifecycle.start()方法进而调用webServer.start()(对于tomcat,从而触发tomcat的启动),在容器关闭时回调webServer.stop()(即webServer立即停止)
         getBeanFactory().registerSingleton("webServerStartStop", new WebServerStartStopLifecycle(this, this.webServer));
     } else if (servletContext != null) { //如果指定了webServer且假定已经做好了webServer的初始化工作
         try {
@@ -147,6 +144,32 @@ public final void refresh() throws BeansException, IllegalStateException {
     }
 }
 ```
+#### WebServer
 
+WebServer.stop()
+强制WebServer立即停止,当前正在处理的请求也会立即丢弃.
+
+WebServer.shutDownGracefully()
+并不会强制WebServer立即停止,而是立即不再处理新的请求,且还会接着处理正在处理的请求,然后再执行callback,最后停止WebServer.
+当然这个过程可能比较慢长,如果等不及的话,再次调用stop(),这样WebServer就立即停止了.
+
+```text
+public interface WebServer {
+
+	void start() throws WebServerException;
+	void stop() throws WebServerException;
+	int getPort();
+
+	/**
+	 * Initiates a graceful shutdown of the web server. Handling of new requests is prevented and the given {@code callback} is invoked at the end of the attempt. 
+	 * The attempt can be explicitly ended by invoking stop. 
+	 * The default implementation invokes the callback immediately with GracefulShutdownResult.IMMEDIATE, i.e. no attempt is made at a graceful shutdown.
+	 */
+	default void shutDownGracefully(GracefulShutdownCallback callback) {
+		callback.shutdownComplete(GracefulShutdownResult.IMMEDIATE);
+	}
+
+}
+```
 
 
