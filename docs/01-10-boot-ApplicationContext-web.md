@@ -172,4 +172,41 @@ public interface WebServer {
 }
 ```
 
+##### shutDownGracefully
+WebServer.shutDownGracefully方法在从2.3.0开始才有.
 
+tomcat
+```text
+org.springframework.boot.web.embedded.tomcat.GracefulShutdown.doShutdown
+
+private void doShutdown(GracefulShutdownCallback callback) {
+    // 关闭tomcat的Connector
+    List<Connector> connectors = getConnectors();
+    connectors.forEach(this::close);
+    try {
+        for (Container host : this.tomcat.getEngine().findChildren()) {
+            for (Container context : host.findChildren()) {
+                while (isActive(context)) {
+                    if (this.aborted) {
+                        logger.info("Graceful shutdown aborted with one or more requests still active");
+                        callback.shutdownComplete(GracefulShutdownResult.REQUESTS_ACTIVE);
+                        return;
+                    }
+                    Thread.sleep(50);
+                }
+            }
+        }
+
+    }
+    catch (InterruptedException ex) {
+        Thread.currentThread().interrupt();
+    }
+    logger.info("Graceful shutdown complete");
+    callback.shutdownComplete(GracefulShutdownResult.IDLE);
+}
+
+private void close(Connector connector) {
+    connector.pause();
+    connector.getProtocolHandler().closeServerSocketGraceful();
+}
+```
